@@ -1,0 +1,7 @@
+CREATE DATABASE estante;
+USE estante;
+CREATE TABLE livros(
+codigo INT PRIMARY KEY AUTO_INCREMENT,
+titulo VARCHAR(100),
+autor VARCHAR(100)
+);
