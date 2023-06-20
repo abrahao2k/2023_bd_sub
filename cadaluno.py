@@ -9,6 +9,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 
+#Conexão com o BD
 import mysql.connector
 conexao = mysql.connector.connect(
     host="localhost", user="root",
@@ -16,10 +17,11 @@ conexao = mysql.connector.connect(
 cursor = conexao.cursor()
 print("Conectado ao BD.")
 
+
 class Ui_CadAluno(object):
     def setupUi(self, CadAluno):
         CadAluno.setObjectName("CadAluno")
-        CadAluno.resize(253, 232)
+        CadAluno.resize(237, 220)
         self.centralwidget = QtWidgets.QWidget(parent=CadAluno)
         self.centralwidget.setObjectName("centralwidget")
         self.formLayout = QtWidgets.QFormLayout(self.centralwidget)
@@ -43,35 +45,37 @@ class Ui_CadAluno(object):
         self.label_turno = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_turno.setObjectName("label_turno")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_turno)
-        self.horizontalLayout_turno = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_turno.setObjectName("horizontalLayout_turno")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.radio_manha = QtWidgets.QRadioButton(parent=self.centralwidget)
+        self.radio_manha.setChecked(True)
         self.radio_manha.setObjectName("radio_manha")
-        self.horizontalLayout_turno.addWidget(self.radio_manha)
+        self.horizontalLayout.addWidget(self.radio_manha)
         self.radio_tarde = QtWidgets.QRadioButton(parent=self.centralwidget)
         self.radio_tarde.setObjectName("radio_tarde")
-        self.horizontalLayout_turno.addWidget(self.radio_tarde)
+        self.horizontalLayout.addWidget(self.radio_tarde)
         self.radio_noite = QtWidgets.QRadioButton(parent=self.centralwidget)
         self.radio_noite.setObjectName("radio_noite")
-        self.horizontalLayout_turno.addWidget(self.radio_noite)
-        self.formLayout.setLayout(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.horizontalLayout_turno)
+        self.horizontalLayout.addWidget(self.radio_noite)
+        self.formLayout.setLayout(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.horizontalLayout)
         self.label_extra = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_extra.setObjectName("label_extra")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_extra)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.check_atleta = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.check_atleta.setObjectName("check_atleta")
+        self.horizontalLayout_2.addWidget(self.check_atleta)
+        self.check_bolsista = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.check_bolsista.setObjectName("check_bolsista")
+        self.horizontalLayout_2.addWidget(self.check_bolsista)
+        self.formLayout.setLayout(3, QtWidgets.QFormLayout.ItemRole.FieldRole, self.horizontalLayout_2)
         self.label_obs = QtWidgets.QLabel(parent=self.centralwidget)
         self.label_obs.setObjectName("label_obs")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_obs)
-        self.horizontalLayout__extra = QtWidgets.QHBoxLayout()
-        self.horizontalLayout__extra.setObjectName("horizontalLayout__extra")
-        self.check_atleta = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.check_atleta.setObjectName("check_atleta")
-        self.horizontalLayout__extra.addWidget(self.check_atleta)
-        self.check_bolsista = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.check_bolsista.setObjectName("check_bolsista")
-        self.horizontalLayout__extra.addWidget(self.check_bolsista)
-        self.formLayout.setLayout(3, QtWidgets.QFormLayout.ItemRole.FieldRole, self.horizontalLayout__extra)
         self.text_obs = QtWidgets.QTextEdit(parent=self.centralwidget)
         self.text_obs.setObjectName("text_obs")
+        self.text_obs.setTabChangesFocus(True)
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.FieldRole, self.text_obs)
         self.botao_salvar = QtWidgets.QPushButton(parent=self.centralwidget)
         self.botao_salvar.setObjectName("botao_salvar")
@@ -87,28 +91,23 @@ class Ui_CadAluno(object):
         CadAluno.setWindowTitle(_translate("CadAluno", "Cadastro de Aluno"))
         self.label_nome.setText(_translate("CadAluno", "Nome:"))
         self.label_curso.setText(_translate("CadAluno", "Curso:"))
-        self.combo_curso.setItemText(0, _translate("CadAluno", "Informática"))
+        self.combo_curso.setItemText(0, _translate("CadAluno", "Edificações"))
         self.combo_curso.setItemText(1, _translate("CadAluno", "Eletrotécnica"))
-        self.combo_curso.setItemText(2, _translate("CadAluno", "Mecânica"))
-        self.combo_curso.setItemText(3, _translate("CadAluno", "Edificações"))
+        self.combo_curso.setItemText(2, _translate("CadAluno", "Informática"))
+        self.combo_curso.setItemText(3, _translate("CadAluno", "Mecânica"))
         self.label_turno.setText(_translate("CadAluno", "Turno:"))
         self.radio_manha.setText(_translate("CadAluno", "Manhã"))
         self.radio_tarde.setText(_translate("CadAluno", "Tarde"))
         self.radio_noite.setText(_translate("CadAluno", "Noite"))
         self.label_extra.setText(_translate("CadAluno", "Extra:"))
-        self.label_obs.setText(_translate("CadAluno", "Obs.:"))
         self.check_atleta.setText(_translate("CadAluno", "Atleta"))
         self.check_bolsista.setText(_translate("CadAluno", "Bolsista"))
+        self.label_obs.setText(_translate("CadAluno", "Obs.:"))
         self.botao_salvar.setText(_translate("CadAluno", "SALVAR"))
 
     def salvar(self):
-        #captura o nome digitado
         nome = self.line_nome.text()
-        
-        #captura o curso selecionado
         curso = self.combo_curso.currentText()
-        
-        #captura o turno selecionado
         turno = ""
         if self.radio_manha.isChecked():
             turno = "Manhã"
@@ -116,45 +115,39 @@ class Ui_CadAluno(object):
             turno = "Tarde"
         elif self.radio_noite.isChecked():
             turno = "Noite"
-        
-        #captura os extras
         atleta = "Não"
         if self.check_atleta.isChecked():
             atleta = "Sim"
-        
         bolsista = "Não"
         if self.check_bolsista.isChecked():
             bolsista = "Sim"
-        
-        #captura a observação
         obs = self.text_obs.toPlainText()
+        #print(nome, curso, turno, atleta, bolsista, obs)
         
-        #testar a captura
-        print(nome, curso, turno, atleta, bolsista, obs)
-        
-        sql = "INSERT INTO ALUNO VALUES (null, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO ALUNO VALUES(null, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql, (nome, curso, turno, atleta, bolsista, obs))
         conexao.commit()
-        print("INSERIDO COM SUCESSO")
+        #print("INSERIDO COM SUCESSO")
         
+        #from PyQt6.QtWidgets import QMessageBox
         msg = QMessageBox()
         msg.setWindowTitle("Aviso")
-        msg.setText("INSERIDO COM SUCESSO")
+        msg.setText("Inserido com sucesso.")
         msg.exec()
         
         #limpar os campos
         self.line_nome.setText("")
         self.combo_curso.setCurrentIndex(0)
         self.radio_manha.setChecked(True)
-        self.radio_tarde.setChecked(False)
-        self.radio_noite.setChecked(False)
+        self.radio_tarde.setChecked(False) #opcional
+        self.radio_noite.setChecked(False) #opcional
         self.check_atleta.setChecked(False)
         self.check_bolsista.setChecked(False)
         self.text_obs.setPlainText("")
+        self.line_nome.setFocus() #seleciona o campo
         
         
-        
-        
+            
 
 if __name__ == "__main__":
     import sys
