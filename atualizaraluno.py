@@ -8,6 +8,13 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+#Conexão com o BD
+import mysql.connector
+conexao = mysql.connector.connect(
+    host="localhost", user="root",
+    password="", database="escola")
+cursor = conexao.cursor()
+print("Conectado ao BD.")
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -78,6 +85,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addLayout(self.horizontalLayout_5, 5, 1, 1, 1)
         self.botao_abrir = QtWidgets.QPushButton(parent=self.centralwidget)
         self.botao_abrir.setObjectName("botao_abrir")
+        self.botao_abrir.clicked.connect(self.abrir)
         self.gridLayout.addWidget(self.botao_abrir, 0, 2, 1, 1)
         self.line = QtWidgets.QFrame(parent=self.centralwidget)
         self.line.setFrameShape(QtWidgets.QFrame.Shape.HLine)
@@ -109,6 +117,44 @@ class Ui_MainWindow(object):
         self.check_atleta_2.setText(_translate("MainWindow", "Atleta"))
         self.check_bolsista_2.setText(_translate("MainWindow", "Bolsista"))
         self.botao_abrir.setText(_translate("MainWindow", "Abrir"))
+
+    def abrir(self):
+        codigo = self.line_codigo.text()
+        sql = "SELECT * FROM aluno WHERE codigo = " + codigo
+        cursor.execute(sql)
+        dados = cursor.fetchall()
+        
+        if len(dados) > 0 :  #o registro existe
+            self.line_nome.setText(dados[0][1])
+            self.combo_curso.setCurrentText(dados[0][2])
+            
+            if dados[0][3] == "Manhã":
+                self.radio_manha_2.setChecked(True)
+            elif dados[0][3] == "Tarde":
+                self.radio_tarde_2.setChecked(True)
+            elif dados[0][3] == "Noite":
+                self.radio_noite_2.setChecked(True)
+            
+            if dados[0][4] == "Sim":
+                self.check_atleta_2.setChecked(True)
+            else:
+                self.check_atleta_2.setChecked(False)
+            
+            if dados[0][5] == "Sim":
+                self.check_bolsista_2.setChecked(True)
+            else:
+                self.check_bolsista_2.setChecked(False)
+            
+            self.text_obs.setPlainText(dados[0][6])
+            
+        else:
+            print("REGISTRO NÃO ENCONTRADO.")
+            
+        
+        
+        
+        
+
 
 
 if __name__ == "__main__":
