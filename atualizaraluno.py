@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMessageBox
 
 #Conexão com o BD
 import mysql.connector
@@ -26,6 +27,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.botao_atualizar = QtWidgets.QPushButton(parent=self.centralwidget)
         self.botao_atualizar.setObjectName("botao_atualizar")
+        self.botao_atualizar.clicked.connect(self.atualizar)
         self.gridLayout.addWidget(self.botao_atualizar, 7, 1, 1, 1)
         self.line_nome = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.line_nome.setObjectName("line_nome")
@@ -63,25 +65,25 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.line_codigo, 0, 1, 1, 1)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.radio_manha_2 = QtWidgets.QRadioButton(parent=self.centralwidget)
-        self.radio_manha_2.setChecked(True)
-        self.radio_manha_2.setObjectName("radio_manha_2")
-        self.horizontalLayout_4.addWidget(self.radio_manha_2)
-        self.radio_tarde_2 = QtWidgets.QRadioButton(parent=self.centralwidget)
-        self.radio_tarde_2.setObjectName("radio_tarde_2")
-        self.horizontalLayout_4.addWidget(self.radio_tarde_2)
-        self.radio_noite_2 = QtWidgets.QRadioButton(parent=self.centralwidget)
-        self.radio_noite_2.setObjectName("radio_noite_2")
-        self.horizontalLayout_4.addWidget(self.radio_noite_2)
+        self.radio_manha = QtWidgets.QRadioButton(parent=self.centralwidget)
+        self.radio_manha.setChecked(True)
+        self.radio_manha.setObjectName("radio_manha")
+        self.horizontalLayout_4.addWidget(self.radio_manha)
+        self.radio_tarde = QtWidgets.QRadioButton(parent=self.centralwidget)
+        self.radio_tarde.setObjectName("radio_tarde")
+        self.horizontalLayout_4.addWidget(self.radio_tarde)
+        self.radio_noite = QtWidgets.QRadioButton(parent=self.centralwidget)
+        self.radio_noite.setObjectName("radio_noite")
+        self.horizontalLayout_4.addWidget(self.radio_noite)
         self.gridLayout.addLayout(self.horizontalLayout_4, 4, 1, 1, 1)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.check_atleta_2 = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.check_atleta_2.setObjectName("check_atleta_2")
-        self.horizontalLayout_5.addWidget(self.check_atleta_2)
-        self.check_bolsista_2 = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.check_bolsista_2.setObjectName("check_bolsista_2")
-        self.horizontalLayout_5.addWidget(self.check_bolsista_2)
+        self.check_atleta = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.check_atleta.setObjectName("check_atleta")
+        self.horizontalLayout_5.addWidget(self.check_atleta)
+        self.check_bolsista = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.check_bolsista.setObjectName("check_bolsista")
+        self.horizontalLayout_5.addWidget(self.check_bolsista)
         self.gridLayout.addLayout(self.horizontalLayout_5, 5, 1, 1, 1)
         self.botao_abrir = QtWidgets.QPushButton(parent=self.centralwidget)
         self.botao_abrir.setObjectName("botao_abrir")
@@ -99,7 +101,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Atualizar Aluno"))
         self.botao_atualizar.setText(_translate("MainWindow", "ATUALIZAR"))
         self.combo_curso.setItemText(0, _translate("MainWindow", "Edificações"))
         self.combo_curso.setItemText(1, _translate("MainWindow", "Eletrotécnica"))
@@ -111,11 +113,11 @@ class Ui_MainWindow(object):
         self.label_nome.setText(_translate("MainWindow", "Nome:"))
         self.label_obs.setText(_translate("MainWindow", "Obs.:"))
         self.label_codigo.setText(_translate("MainWindow", "Código:"))
-        self.radio_manha_2.setText(_translate("MainWindow", "Manhã"))
-        self.radio_tarde_2.setText(_translate("MainWindow", "Tarde"))
-        self.radio_noite_2.setText(_translate("MainWindow", "Noite"))
-        self.check_atleta_2.setText(_translate("MainWindow", "Atleta"))
-        self.check_bolsista_2.setText(_translate("MainWindow", "Bolsista"))
+        self.radio_manha.setText(_translate("MainWindow", "Manhã"))
+        self.radio_tarde.setText(_translate("MainWindow", "Tarde"))
+        self.radio_noite.setText(_translate("MainWindow", "Noite"))
+        self.check_atleta.setText(_translate("MainWindow", "Atleta"))
+        self.check_bolsista.setText(_translate("MainWindow", "Bolsista"))
         self.botao_abrir.setText(_translate("MainWindow", "Abrir"))
 
     def abrir(self):
@@ -124,38 +126,95 @@ class Ui_MainWindow(object):
         cursor.execute(sql)
         dados = cursor.fetchall()
         
-        if len(dados) > 0 :  #o registro existe
+        if len(dados) == 0 :  # o registro não existe
+            
+            msg = QMessageBox()
+            msg.setWindowTitle("Aviso")
+            msg.setText("Registro não encontrado.")
+            msg.exec()
+            
+        else: # o registro foi encontrado, preencher os componentes
+            
             self.line_nome.setText(dados[0][1])
             self.combo_curso.setCurrentText(dados[0][2])
             
             if dados[0][3] == "Manhã":
-                self.radio_manha_2.setChecked(True)
+                self.radio_manha.setChecked(True)
             elif dados[0][3] == "Tarde":
-                self.radio_tarde_2.setChecked(True)
+                self.radio_tarde.setChecked(True)
             elif dados[0][3] == "Noite":
-                self.radio_noite_2.setChecked(True)
+                self.radio_noite.setChecked(True)
             
             if dados[0][4] == "Sim":
-                self.check_atleta_2.setChecked(True)
+                self.check_atleta.setChecked(True)
             else:
-                self.check_atleta_2.setChecked(False)
+                self.check_atleta.setChecked(False)
             
             if dados[0][5] == "Sim":
-                self.check_bolsista_2.setChecked(True)
+                self.check_bolsista.setChecked(True)
             else:
-                self.check_bolsista_2.setChecked(False)
+                self.check_bolsista.setChecked(False)
             
             self.text_obs.setPlainText(dados[0][6])
             
-        else:
-            print("REGISTRO NÃO ENCONTRADO.")
-            
+            self.line_codigo.setReadOnly(True)
         
+    
+    def atualizar(self):
         
+        codigo = self.line_codigo.text()
         
+        nome = self.line_nome.text()
         
+        curso = self.combo_curso.currentText()
+        
+        turno = ""
+        
+        if self.radio_manha.isChecked():
+            turno = "Manhã"
+        elif self.radio_tarde.isChecked():
+            turno = "Tarde"
+        elif self.radio_noite.isChecked():
+            turno = "Noite"
+        
+        atleta = "Não"
+        
+        if self.check_atleta.isChecked():
+            atleta = "Sim"
+        
+        bolsista = "Não"
+        
+        if self.check_bolsista.isChecked():
+            bolsista = "Sim"
+        
+        obs = self.text_obs.toPlainText()
+        
+        sql = ''' UPDATE ALUNO SET nome = %s,
+                  curso = %s,
+                  turno = %s,
+                  atleta = %s,
+                  bolsista = %s,
+                  obs = %s
+                  WHERE codigo = %s '''
+        cursor.execute(sql, (nome, curso, turno, atleta, bolsista, obs, codigo))
+        conexao.commit()
 
-
+        msg = QMessageBox()
+        msg.setWindowTitle("Aviso")
+        msg.setText("Atualizado com sucesso.")
+        msg.exec()
+        
+        #limpar os campos
+        self.line_codigo.setText("")
+        self.line_nome.setText("")
+        self.combo_curso.setCurrentIndex(0)
+        self.radio_manha.setChecked(True)
+        self.check_atleta.setChecked(False)
+        self.check_bolsista.setChecked(False)
+        self.text_obs.setPlainText("")
+        self.line_codigo.setFocus()
+        self.line_codigo.setReadOnly(False)
+        
 
 if __name__ == "__main__":
     import sys
