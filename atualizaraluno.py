@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QMessageBox
 
 #Conexão com o BD
 import mysql.connector
@@ -26,6 +27,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.botao_atualizar = QtWidgets.QPushButton(parent=self.centralwidget)
         self.botao_atualizar.setObjectName("botao_atualizar")
+        self.botao_atualizar.clicked.connect(self.atualizar)
         self.gridLayout.addWidget(self.botao_atualizar, 7, 1, 1, 1)
         self.line_nome = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.line_nome.setObjectName("line_nome")
@@ -147,9 +149,78 @@ class Ui_MainWindow(object):
             
             self.text_obs.setPlainText(dados[0][6])
             
-        else:
-            print("REGISTRO NÃO ENCONTRADO.")
+            #bloquear o campo código
+            self.line_codigo.setReadOnly(True)
             
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Aviso")
+            msg.setText("Registro não encontrado.")
+            msg.exec()
+            
+            #limpar os campos
+            self.line_nome.setText("")
+            self.combo_curso.setCurrentIndex(0)
+            self.radio_manha_2.setChecked(True)
+            self.check_atleta_2.setChecked(False)
+            self.check_bolsista_2.setChecked(False)
+            self.text_obs.setPlainText("")
+    
+    
+        
+    def atualizar(self):
+        codigo = self.line_codigo.text()
+        nome   = self.line_nome.text()
+        curso  = self.combo_curso.currentText()
+        
+        turno  = ""
+        if self.radio_manha_2.isChecked():
+            turno = "Manhã"
+        elif self.radio_tarde_2.isChecked():
+            turno = "Tarde"
+        elif self.radio_noite_2.isChecked():
+            turno = "Noite"
+        
+        atleta = "Não"
+        if self.check_atleta_2.isChecked():
+            atleta = "Sim"
+        
+        bolsista = "Não"
+        if self.check_bolsista_2.isChecked():
+            bolsista = "Sim"
+        
+        obs = self.text_obs.toPlainText()
+        
+        sql = '''UPDATE aluno SET
+                nome = %s,
+                curso = %s,
+                turno = %s,
+                atleta = %s,
+                bolsista = %s,
+                obs = %s 
+                WHERE codigo = %s'''
+        
+        cursor.execute(sql, (nome, curso, turno, atleta,
+                             bolsista, obs, codigo) )
+        
+        conexao.commit()
+        
+        msg = QMessageBox()
+        msg.setWindowTitle("Aviso")
+        msg.setText("Registro atualizado com sucesso.")
+        msg.exec()
+        
+        #limpar os campos
+        self.line_nome.setText("")
+        self.combo_curso.setCurrentIndex(0)
+        self.radio_manha_2.setChecked(True)
+        self.check_atleta_2.setChecked(False)
+        self.check_bolsista_2.setChecked(False)
+        self.text_obs.setPlainText("")
+        
+        #desbloquar o campo código
+        self.line_codigo.setReadOnly(False)
+        
         
         
         
